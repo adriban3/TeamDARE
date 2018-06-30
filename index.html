@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>   
     <title>Document</title>
 
     <style>
@@ -47,17 +49,15 @@
     </script>
 
     <script>
-        var map;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
-            });
-        }
-        </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"
-        async defer>
+        L.mapquest.key = 'lk4t8vdc1GbFGarz3jGhhCvcH03NQYbX';
+
+        // 'map' refers to a <div> element with the ID map
+        L.mapquest.map('map', {
+        center: [50, 120],
+        layers: L.mapquest.tileLayer('map'),
+        zoom: 12
+        });
     </script>
-    
+
 </body>
 </html>
