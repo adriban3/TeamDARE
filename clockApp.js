@@ -19,8 +19,11 @@ var clockApp = {
         var hours = $("#hoursInput").val();
         var minutes = $("#minutesInput").val();
         var clock = hours + ":" + minutes;  
+        var artist = $("#soch").val();
+        console.log(artist);
+        var cb = "clock.html";
 
-        function generateSpotifyAccessToken(cb) {
+        function generateSpotifyAccessToken(cb) { //cb is callback?  What else could it be?
             $.ajax({
                 url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
                 method: "POST",
@@ -56,6 +59,7 @@ var clockApp = {
         var alarm = setInterval(function() {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
+                generateSpotifyAccessToken(cb);
                 clearInterval(alarm);
             }
         }, 1000);
