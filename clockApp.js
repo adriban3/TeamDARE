@@ -21,9 +21,8 @@ var clockApp = {
         var clock = hours + ":" + minutes;  
         var artist = $("#soch").val();
         console.log(artist);
-        var cb = "clock.html";
 
-        function generateSpotifyAccessToken(cb) { //cb is callback?  What else could it be?
+        function generateSpotifyAccessToken() { //cb is callback?  What else could it be?
             $.ajax({
                 url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
                 method: "POST",
@@ -35,14 +34,15 @@ var clockApp = {
                 }
             }).then(res => {
                 spotify_access_token = res.access_token;
-                cb();
+                console.log(res);
+                getArtist(artist);
             }).catch(err => console.error(err));
         };
         
         //         //
         // Spotify //
         //         //
-        function getArtist(artist, cb) {
+        function getArtist(artist) {
             $.ajax({
                 method: 'GET',
                 url: 'https://api.spotify.com/v1/search',
@@ -53,13 +53,13 @@ var clockApp = {
                 headers: {
                     Authorization: "Bearer " + spotify_access_token
                 }
-            }).then(cb).catch(() => generateSpotifyAccessToken(() => getArtist(artist, cb)));
+            }).then(res => console.log(res)).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
         }
         
         var alarm = setInterval(function() {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
-                generateSpotifyAccessToken(cb);
+                generateSpotifyAccessToken(artist);
                 clearInterval(alarm);
             }
         }, 1000);
