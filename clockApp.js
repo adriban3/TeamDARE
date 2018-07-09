@@ -1,7 +1,9 @@
+var audio = new Audio("imgs/raven.mp3");
+//Hours and minutes input 
 var clockApp = {
     dropDownSet: function() {
         for (var i = 0; i < 24; i++) {
-            $("#hoursInput").append("<option>" + i + "</option>");
+            $("#hoursInput").append("<option>" + i + "</option>" );
         }
 
         for (var i = 0; i < 60; i++) {
@@ -30,7 +32,7 @@ var clockApp = {
         // });
         
         var alarm = setInterval(function() {
-            if (moment().format("H:mm") == clock) {
+            if (moment().format("HH:mm") == clock) {
 
                 const play = ({
                     spotify_uri,
@@ -53,10 +55,7 @@ var clockApp = {
                     });
                   };
                   
-                  play({
-                    playerInstance: new Spotify.Player({ name: "..." }),
-                    spotify_uri: 'spotify:track:7xGfFoTpQ2E7fRF5lN10tr',
-                  });
+                  audio.play();
 
                 // var widget = SC.Widget("widg");
                 // widget.play();
@@ -75,7 +74,7 @@ var clockApp = {
         $.ajax(url, "Get").then(function(response) {
             var man = response.route.legs[0].maneuvers;
             for (var i in man) {
-                $(dir).append(response.route.legs[0].maneuvers[i].narrative + "<br>");
+                $("#dir").append(response.route.legs[0].maneuvers[i].narrative + "<br>");
             }
         })
     },
