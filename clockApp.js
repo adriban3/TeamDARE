@@ -1,4 +1,40 @@
 var clockApp = {
+
+    SDKinit: function(artist, spotify_access_token) {
+
+        window.onSpotifyWebPlaybackSDKReady = (spotify_access_token) => {
+            // You can now initialize Spotify.Player and use the SDK
+            // const token = 'BQAFGjO5ohTTX7xuRiUWRzxZaA1nkCWoOa-Vzerp1C9b4EYzCvz0YZLGfkQlmZYo9GEO_XoFK2ses601QzTUsNMyvXHJvQsyBiTcuaCnKAerNqdLEL0hK4aMLHyszaXkuouEiWUsaug_TvlGEuWe0xkxrBtm0gmp-1nxHQ';
+              const player = new Spotify.Player({
+                  name: 'Web Playback SDK Quick Start Player',
+                  getOAuthToken: cb => { cb(spotify_access_token); }
+              });
+  
+              // Error handling
+              player.addListener('initialization_error', ({ message }) => { console.error(message); });
+              player.addListener('authentication_error', ({ message }) => { console.error(message); });
+              player.addListener('account_error', ({ message }) => { console.error(message); });
+              player.addListener('playback_error', ({ message }) => { console.error(message); });
+  
+              // Playback status updates
+              player.addListener('player_state_changed', state => { console.log(state); });
+  
+              // Ready
+              player.addListener('ready', ({ device_id }) => {
+                  console.log('Ready with Device ID', device_id);
+              });
+  
+              // Not Ready
+              player.addListener('not_ready', ({ device_id }) => {
+                  console.log('Device ID has gone offline', device_id);
+              });
+  
+              // Connect to the player!
+              player.connect();
+              };
+        clockApp.getArtist(artist, spotify_access_token);
+    },
+
     dropDownSet: function() {
         for (var i = 0; i < 24; i++) {
             $("#hoursInput").append("<option>" + i + "</option>");
@@ -14,6 +50,58 @@ var clockApp = {
         }
     },
 
+    generateSpotifyAccessToken: function(artist) {
+        $.ajax({
+            url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
+            method: "POST",
+            data: {
+                grant_type: "client_credentials",
+                scope: "user-modify-playback-state",
+            },
+            headers: {
+                Authorization: "Basic " + btoa("21dad2969f2947419ba9fa2cac7560d8" + ":" + "5d62cecbdad943d9b8c5047a6c9e8aac")
+            }
+        }).then(res => {
+            spotify_access_token = res.access_token;
+            console.log(res);
+            console.log(spotify_access_token);
+            clockApp.SDKinit(artist, spotify_access_token);
+        }).catch(err => console.error(err));
+    },
+
+    getArtist: function(artist, spotify_access_token) {
+        $.ajax({
+            method: 'GET',
+            url: 'https://api.spotify.com/v1/search',
+            data: {
+                q: artist,
+                type: 'track'
+            },
+            headers: {
+                Authorization: "Bearer " + spotify_access_token
+            }
+        }).then(res => {console.log(res), clockApp.playSong(res.tracks.items[0].uri, spotify_access_token)});
+        // .catch(() => generateSpotifyAccessToken(() => getArtist(artist)))
+    },
+
+    playSong: function(uri, spotify_access_token) {
+
+        $.ajax({
+            method: 'PUT',
+            url: 'https://api.spotify.com/v1/me/player/play',
+            data: {
+                context_uri: uri
+            },
+            headers: {
+            Authorization: "Bearer" + spotify_access_token
+        },
+        })
+        //need this to play song
+        //check these links:
+        //https://developer.spotify.com/documentation/web-playback-sdk/reference/#playing-a-spotify-uri
+        //https://developer.spotify.com/documentation/web-api/reference/player/start-a-users-playback/
+    },
+
     clockSet: function(e) {
         e.preventDefault();
         var hours = $("#hoursInput").val();
@@ -21,45 +109,11 @@ var clockApp = {
         var clock = hours + ":" + minutes;  
         var artist = $("#soch").val();
         console.log(artist);
-
-        function generateSpotifyAccessToken() { //cb is callback?  What else could it be?
-            $.ajax({
-                url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
-                method: "POST",
-                data: {
-                    grant_type: "client_credentials"
-                },
-                headers: {
-                    Authorization: "Basic " + btoa("21dad2969f2947419ba9fa2cac7560d8" + ":" + "5d62cecbdad943d9b8c5047a6c9e8aac")
-                }
-            }).then(res => {
-                spotify_access_token = res.access_token;
-                console.log(res);
-                getArtist(artist);
-            }).catch(err => console.error(err));
-        };
-        
-        //         //
-        // Spotify //
-        //         //
-        function getArtist(artist) {
-            $.ajax({
-                method: 'GET',
-                url: 'https://api.spotify.com/v1/search',
-                data: {
-                    q: artist,
-                    type: 'track'
-                },
-                headers: {
-                    Authorization: "Bearer " + spotify_access_token
-                }
-            }).then(res => console.log(res)).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
-        }
         
         var alarm = setInterval(function() {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
-                generateSpotifyAccessToken(artist);
+                clockApp.generateSpotifyAccessToken(artist);
                 clearInterval(alarm);
             }
         }, 1000);
@@ -81,7 +135,6 @@ var clockApp = {
         })
     },
 }
-
 
 $(document).ready(function() {clockApp.dropDownSet()});
 
