@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css"/>   
+    <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.css" />
     <title>Document</title>
 
     <style>
         /* Always set the map height explicitly to define the size of the div
             * element that contains the map. */
+
         #map {
             height: 100%;
         }
+
         /* Optional: Makes the sample page fill the window. */
-        html, body {
+
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
     </style>
 </head>
+
 <body>
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
+    <script src="assets/javascript/victor.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
 
     <div id="clock"></div>
     <div id="quote"></div>
@@ -36,16 +44,16 @@
     <script src="https://connect.soundcloud.com/sdk/sdk-3.3.0.js"></script>
 
     <script>
-    SC.initialize({
-        client_id: 'Andrew Driban',
-        // redirect_uri: 'http://example.com/callback'
-    });
+        SC.initialize({
+            client_id: 'Andrew Driban',
+            // redirect_uri: 'http://example.com/callback'
+        });
 
-    var track_url = 'https://soundcloud.com/olivertree/sets/alien-boy-ep-1';
-    SC.oEmbed(track_url, { auto_play: true }).then(function(oEmbed) {
-    console.log('oEmbed response: ', oEmbed);
-    $("#music").append(oEmbed.html);
-    });
+        var track_url = 'https://soundcloud.com/olivertree/sets/alien-boy-ep-1';
+        SC.oEmbed(track_url, { auto_play: true }).then(function (oEmbed) {
+            console.log('oEmbed response: ', oEmbed);
+            $("#music").append(oEmbed.html);
+        });
     </script>
 
     <script>
@@ -53,11 +61,14 @@
 
         // 'map' refers to a <div> element with the ID map
         L.mapquest.map('map', {
-        center: [50, 120],
-        layers: L.mapquest.tileLayer('map'),
-        zoom: 12
+            center: [50, 120],
+            layers: L.mapquest.tileLayer('map'),
+            zoom: 12
         });
     </script>
 
+
+
 </body>
+
 </html>
