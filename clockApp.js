@@ -102,7 +102,8 @@ var clockApp = {
         {station: "EAST POINT STATION", statLong: -84.440344, statLat: 33.677814}, //East Point
         {station: "INDIAN CREEK STATION", statLong: -84.229656, statLat: 33.769794}, //Indian Creek
         {station: "COLLEGE PARK STATION", statLong: -84.448793, statLat: 33.651673}, //College Park
-        {station: "AIRPORT STATION", statLong: -84.446341, statLat: 33.640758} //Airport
+        {station: "AIRPORT STATION", statLong: -84.446341, statLat: 33.640758},
+        {station: "BANKHEAD STATION", statLong: -84.42884, statLat: 33.77189} //Airport
      ] //Airport
 
     ,
@@ -352,7 +353,7 @@ var clockApp = {
             var arrival = "";
             var trainInfo = "";
 
-        if (myLines2.length !== 0) {
+        if (myLines2.length !== 0 && whichLine !== "No Direct Line") {
             for (var i = 0; i < myLines2.length; i++) {
                 
                 arrival = "Train Arriving at " + myLines2[i].station + 
@@ -366,6 +367,11 @@ var clockApp = {
                 
             };
 
+        }
+
+        else if (whichLine === "No Direct Line") {
+            trainInfo = "No Direct Line to Your Destination!";
+            console.log(trainInfo);
         }
         
         else {
