@@ -108,8 +108,8 @@ var clockApp = {
           };
           
           play({
-            playerInstance: new Spotify.Player({ name: "..." }),
-            spotify_uri: 'spotify:track:7xGfFoTpQ2E7fRF5lN10tr',
+            playerInstance: new Spotify.Player({ name: "test" }),
+            spotify_uri: uri,
           });
 
         // $.ajax({
