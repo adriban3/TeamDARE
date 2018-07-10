@@ -16,7 +16,7 @@ var database = firebase.database();
 var clockApp = {
     dropDownSet: function () {
         for (var i = 0; i < 24; i++) {
-            $("#hoursInput").append("<option>" + i + "</option>");
+            $("#hoursInput").append("<option>" + i + "</option>" );
         }
 
         for (var i = 0; i < 60; i++) {
@@ -134,7 +134,7 @@ var clockApp = {
             console.log(response);
             var man = response.route.legs[0].maneuvers;
             for (var i in man) {
-                $(dir).append(response.route.legs[0].maneuvers[i].narrative + "<br>");
+                $("#dir").append(response.route.legs[0].maneuvers[i].narrative + "<br>");
             }
         })
     },
