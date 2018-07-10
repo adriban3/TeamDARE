@@ -6,15 +6,15 @@ var config = {
     projectId: "alarm-7560f",
     storageBucket: "",
     messagingSenderId: "197126652447"
-  };
-  firebase.initializeApp(config);
+};
+firebase.initializeApp(config);
 
 // Create a variable to reference the database
 var database = firebase.database();
 
 
 var clockApp = {
-    dropDownSet: function() {
+    dropDownSet: function () {
         for (var i = 0; i < 24; i++) {
             $("#hoursInput").append("<option>" + i + "</option>");
         }
@@ -29,17 +29,17 @@ var clockApp = {
         }
     },
 
-    clockSet: function(e) {
+    clockSet: function (e) {
         e.preventDefault();
         var hours = $("#hoursInput").val();
         var minutes = $("#minutesInput").val();
-        var clock = hours + ":" + minutes;  
+        var clock = hours + ":" + minutes;
         var artist = $("#soch").val();
         var artistName = "";
         var previewUrl = "";
         console.log(artist);
 
-        function generateSpotifyAccessToken() { //cb is callback?  What else could it be?
+        function generateSpotifyAccessToken() { //cb is callback? (yes -Chris)  What else could it be?
             $.ajax({
                 url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
                 method: "POST",
@@ -55,7 +55,7 @@ var clockApp = {
                 getArtist(artist);
             }).catch(err => console.error(err));
         };
-        
+
         //         //
         // Spotify //
         //         //
@@ -71,37 +71,50 @@ var clockApp = {
                     Authorization: "Bearer " + spotify_access_token
                 }
             }).then(
-                function(res) {
+                function (res) {
                     console.log(res);
-                    artistName = res.tracks.items[0].artists[0].name;
+                    for (var i = 0; i < res.tracks.items.length; i++) {
+                        // console.log(res.tracks.items[i].preview_url);
+                        var temporaryArtistName = res.tracks.items[i].artists[0].name;
+                        // console.log("TEMP ARTIST NAME:", temporaryArtistName);
+                        if (!res.tracks.items[i].preview_url) {
+                            console.log(temporaryArtistName + ": UNAVAILABLE");
+                        } else {
+                            console.log(temporaryArtistName);
+                            $("#song-info").html("<p>" + temporaryArtistName + "</p>");
+                        };
+                    }
+                    // for (i=0; i<res.tracks.items.length; i++) {
+                    //     console.log(res.tracks.items[i].preview_url);
+                    //     if (res.tracks.items[i].preview_url == null) {
+                    //         console.log(res.tracks.items[i].artists[0].name + ": UNAVAILABLE");
+                    //     } else {console.log(res.tracks.items[i].artists[0].name)};
+                    // }
+                    temporaryArtistName = res.tracks.items[0].artists[0].name;
                     previewUrl = res.tracks.items[1].preview_url;
                     console.log(previewUrl);
-                    $("#song-info").html(
-                        "<p>" + artistName + "</p>");
                     var audioElement = document.createElement("audio");
                     audioElement.setAttribute("src", previewUrl);
                     audioElement.play();
-                    $(document).on("click", "#snooze-button", function()
-                    {
+                    $(document).on("click", "#snooze-button", function () {
                         event.preventDefault();
                         // alert("Snoozed for 1 minute!");
                         audioElement.pause();
-                        setInterval(function() {
+                        setInterval(function () {
                             audioElement.play();
                         }, 60000);
                     });
-                    $(document).on("click", "#stop-button", function()
-                    {
+                    $(document).on("click", "#stop-button", function () {
                         event.preventDefault();
                         audioElement.pause();
                         alert("No more alarm!");
                     });
-                    }
-            
-                ).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
+                }
+
+            ).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
         }
-                
-        var alarm = setInterval(function() {
+
+        var alarm = setInterval(function () {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
                 generateSpotifyAccessToken(artist);
@@ -114,10 +127,10 @@ var clockApp = {
 
     MQurl: "http://www.mapquestapi.com/directions/v2/route?", //key=KEY&from=Clarendon Blvd,Arlington,VA&to=2400+S+Glebe+Rd,+Arlington,+VA"
 
-    mapquest: function(e, MQapikey, MQurl) {
+    mapquest: function (e, MQapikey, MQurl) {
         e.preventDefault();
-        url = MQurl + $.param({key: MQapikey, from: $("#yolo").val(), to: $("#dest").val()});
-        $.ajax(url, "Get").then(function(response) {
+        url = MQurl + $.param({ key: MQapikey, from: $("#yolo").val(), to: $("#dest").val() });
+        $.ajax(url, "Get").then(function (response) {
             console.log(response);
             var man = response.route.legs[0].maneuvers;
             for (var i in man) {
@@ -128,8 +141,8 @@ var clockApp = {
 }
 
 
-$(document).ready(function() {clockApp.dropDownSet()});
+$(document).ready(function () { clockApp.dropDownSet() });
 
-$(document).on("click", "#clockSet", function(e) {clockApp.clockSet(e)});
+$(document).on("click", "#clockSet", function (e) { clockApp.clockSet(e) });
 
-$(document).on("click", "#go", function(e) {clockApp.mapquest(e, clockApp.MQapikey, clockApp.MQurl)});
+$(document).on("click", "#go", function (e) { clockApp.mapquest(e, clockApp.MQapikey, clockApp.MQurl) });
