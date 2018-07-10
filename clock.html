@@ -34,8 +34,13 @@
                 </div>
                 <button type="submit" id="clockSet" class="btn btn-primary">Submit</button>
                 <button type="submit" id="go" class="btn btn-primary">Go</button>
+                <button type="submit" id="snooze-button" class="btn btn-primary">Snooze</button>
+                <button type="submit" id="stop-button" class="btn btn-primary">I'm Up!</button>
               </form>
-
+              <div id="song-info">
+                  <div id="play-display">
+                  </div>
+              </div>
               <div id="dir"></div>
 
     <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
@@ -52,6 +57,7 @@
           // You can now initialize Spotify.Player and use the SDK
         };
         </script>
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
     <script src="clockApp.js"></script>
 </body>
 </html>

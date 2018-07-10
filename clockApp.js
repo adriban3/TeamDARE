@@ -1,3 +1,18 @@
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBgSsPWXNag-QHEfyFUD448bfD_wvX7jag",
+    authDomain: "alarm-7560f.firebaseapp.com",
+    databaseURL: "https://alarm-7560f.firebaseio.com",
+    projectId: "alarm-7560f",
+    storageBucket: "",
+    messagingSenderId: "197126652447"
+  };
+  firebase.initializeApp(config);
+
+// Create a variable to reference the database
+var database = firebase.database();
+
+
 var clockApp = {
     dropDownSet: function() {
         for (var i = 0; i < 24; i++) {
@@ -20,6 +35,8 @@ var clockApp = {
         var minutes = $("#minutesInput").val();
         var clock = hours + ":" + minutes;  
         var artist = $("#soch").val();
+        var artistName = "";
+        var previewUrl = "";
         console.log(artist);
 
         function generateSpotifyAccessToken() { //cb is callback?  What else could it be?
@@ -53,9 +70,37 @@ var clockApp = {
                 headers: {
                     Authorization: "Bearer " + spotify_access_token
                 }
-            }).then(res => console.log(res)).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
+            }).then(
+                function(res) {
+                    console.log(res);
+                    artistName = res.tracks.items[0].artists[0].name;
+                    previewUrl = res.tracks.items[1].preview_url;
+                    console.log(previewUrl);
+                    $("#song-info").html(
+                        "<p>" + artistName + "</p>");
+                    var audioElement = document.createElement("audio");
+                    audioElement.setAttribute("src", previewUrl);
+                    audioElement.play();
+                    $(document).on("click", "#snooze-button", function()
+                    {
+                        event.preventDefault();
+                        // alert("Snoozed for 1 minute!");
+                        audioElement.pause();
+                        setInterval(function() {
+                            audioElement.play();
+                        }, 60000);
+                    });
+                    $(document).on("click", "#stop-button", function()
+                    {
+                        event.preventDefault();
+                        audioElement.pause();
+                        alert("No more alarm!");
+                    });
+                    }
+            
+                ).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
         }
-        
+                
         var alarm = setInterval(function() {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
