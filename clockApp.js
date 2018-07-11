@@ -76,15 +76,20 @@ var clockApp = {
                     for (var i = 0; i < res.tracks.items.length; i++) {
                         // console.log(res.tracks.items[i].preview_url);
                         var temporaryArtistName = res.tracks.items[i].artists[0].name;
-                        // console.log("TEMP ARTIST NAME:", temporaryArtistName);
-                        if (!res.tracks.items[i].preview_url) {
+                        var temporarySongURL = res.tracks.items[i].preview_url;
+                        if (!temporarySongURL) {
                             console.log(temporaryArtistName + ": UNAVAILABLE");
                         } else {
-                            console.log(temporaryArtistName);
-                            $("#song-info").html("<p>" + temporaryArtistName + "</p>");
+                            newDiv = $("<div>");
+                            newButton = $("<button>");
+                            newDiv.text(temporaryArtistName);
+                            $("#song-info").append(newDiv);
+                            newButton.text("This One");
+                            newButton.attr("data", temporarySongURL);
+                            newButton.addClass("pick-button");
+                            $("#song-info").append(newButton);
                         };
                     }
-                    temporaryArtistName = res.tracks.items[0].artists[0].name;
                     previewUrl = res.tracks.items[1].preview_url;
                     console.log(previewUrl);
                     var audioElement = document.createElement("audio");
@@ -477,3 +482,7 @@ $(document).ready(function () { clockApp.dropDownSet() });
 $(document).on("click", "#clockSet", function (e) { clockApp.clockSet(e) });
 
 $(document).on("click", "#go", function (e) { clockApp.mapquest(e, clockApp.MQapikey, clockApp.MQurl) });
+
+$(document).on("click", ".pick-button", function (e) {     
+    var pickedSong = $(this).attr("data");
+    console.log(pickedSong); });
