@@ -1,7 +1,22 @@
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBgSsPWXNag-QHEfyFUD448bfD_wvX7jag",
+    authDomain: "alarm-7560f.firebaseapp.com",
+    databaseURL: "https://alarm-7560f.firebaseio.com",
+    projectId: "alarm-7560f",
+    storageBucket: "",
+    messagingSenderId: "197126652447"
+};
+firebase.initializeApp(config);
+
+// Create a variable to reference the database
+var database = firebase.database();
+
+
 var clockApp = {
     dropDownSet: function () {
         for (var i = 0; i < 24; i++) {
-            $("#hoursInput").append("<option>" + i + "</option>");
+            $("#hoursInput").append("<option>" + i + "</option>" );
         }
 
         for (var i = 0; i < 60; i++) {
@@ -20,9 +35,11 @@ var clockApp = {
         var minutes = $("#minutesInput").val();
         var clock = hours + ":" + minutes;
         var artist = $("#soch").val();
+        var artistName = "";
+        var previewUrl = "";
         console.log(artist);
 
-        function generateSpotifyAccessToken() { //cb is callback?  What else could it be?
+        function generateSpotifyAccessToken() { //cb is callback? (yes -Chris)  What else could it be?
             $.ajax({
                 url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
                 method: "POST",
@@ -53,7 +70,49 @@ var clockApp = {
                 headers: {
                     Authorization: "Bearer " + spotify_access_token
                 }
-            }).then(res => console.log(res)).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
+            }).then(
+                function (res) {
+                    console.log(res);
+                    for (var i = 0; i < res.tracks.items.length; i++) {
+                        // console.log(res.tracks.items[i].preview_url);
+                        var temporaryArtistName = res.tracks.items[i].artists[0].name;
+                        // console.log("TEMP ARTIST NAME:", temporaryArtistName);
+                        if (!res.tracks.items[i].preview_url) {
+                            console.log(temporaryArtistName + ": UNAVAILABLE");
+                        } else {
+                            console.log(temporaryArtistName);
+                            $("#song-info").html("<p>" + temporaryArtistName + "</p>");
+                        };
+                    }
+                    // for (i=0; i<res.tracks.items.length; i++) {
+                    //     console.log(res.tracks.items[i].preview_url);
+                    //     if (res.tracks.items[i].preview_url == null) {
+                    //         console.log(res.tracks.items[i].artists[0].name + ": UNAVAILABLE");
+                    //     } else {console.log(res.tracks.items[i].artists[0].name)};
+                    // }
+                    temporaryArtistName = res.tracks.items[0].artists[0].name;
+                    previewUrl = res.tracks.items[1].preview_url;
+                    console.log(previewUrl);
+                    var audioElement = document.createElement("audio");
+                    audioElement.setAttribute("src", previewUrl);
+                    audioElement.play();
+                    var snoozing;
+                    $(document).on("click", "#snooze-button", function () {
+                        event.preventDefault();
+                        // alert("Snoozed for 1 minute!");
+                        audioElement.pause();
+                        snoozing = setInterval(function () {
+                            audioElement.play();
+                        }, 60000);
+                    });
+                    $(document).on("click", "#stop-button", function () {
+                        event.preventDefault();
+                        audioElement.pause();
+                       
+                    });
+                }
+
+            ).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
         }
 
         var alarm = setInterval(function () {
