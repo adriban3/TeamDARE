@@ -15,7 +15,7 @@ body{
 
 .main-container{
     width: 70%;
-    height: 780px;
+    height: 850px;
     margin: 0 auto;
     background: #15142d;
     border-radius: 5px;
@@ -127,6 +127,10 @@ body{
     margin-top: 20px;
 }
 
+    .submitingStuff button{
+        margin-top: 10px;
+    }
+
     #clockSet{
         background:#e0530d;
         border: none;
@@ -147,6 +151,18 @@ body{
         border: none;
         font-family: 'Dosis', sans-serif;
         font-weight: 500;
+    }
+
+    .snooze_{
+        background:#fff200;
+        border: none;
+        border-radius: 5px;
+        font-family: 'Dosis', sans-serif;
+        font-weight: 500;
+        height: 40px;
+        width: 100%;
+        color: rgb(14, 14, 28);
+      
     }
 
 /*Stop alarm button*/
