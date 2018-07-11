@@ -361,7 +361,7 @@ var clockApp = {
 
                 console.log(arrival);
 
-                trainInfo = "You'll be taking the " + whichLine + " line " + "heading " + whichDirection + " at the " + currStatName;
+                trainInfo = "You'll be taking the " + whichLine + " line " + "heading " + whichDirection + " from the " + currStatName + " to the " + destStatName;
 
                 console.log(trainInfo)
                 
@@ -379,7 +379,7 @@ var clockApp = {
 
             console.log(arrival);
 
-            trainInfo = "You'll be taking the " + whichLine + " line " + "heading " + whichDirection + " at the " + currStatName;
+            trainInfo = "You'll be taking the " + whichLine + " line " + "heading " + whichDirection + " from the " + currStatName;
 
             console.log(trainInfo);
         }
