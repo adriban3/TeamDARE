@@ -444,7 +444,7 @@ var clockApp = {
         }
 
         // the next section will handle a non-direct line trip, save this for the future
-            
+        $("#dir").append("<hr><h1>Marta Directions</h1>" + arrival + "<br>" + trainInfo);
 
         })
     },
@@ -459,6 +459,7 @@ var clockApp = {
         $.ajax(url, "Get").then(function (response) {
             console.log(response);
             var man = response.route.legs[0].maneuvers;
+            $("#dir").html("<h1>Driving Directions</h1>");
             for (var i in man) {
                 $("#dir").append(response.route.legs[0].maneuvers[i].narrative + "<br>");
             }
