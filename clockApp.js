@@ -96,18 +96,19 @@ var clockApp = {
                     var audioElement = document.createElement("audio");
                     audioElement.setAttribute("src", previewUrl);
                     audioElement.play();
+                    var snoozing;
                     $(document).on("click", "#snooze-button", function () {
                         event.preventDefault();
                         // alert("Snoozed for 1 minute!");
                         audioElement.pause();
-                        setInterval(function () {
+                        snoozing = setInterval(function () {
                             audioElement.play();
                         }, 60000);
                     });
                     $(document).on("click", "#stop-button", function () {
                         event.preventDefault();
                         audioElement.pause();
-                        alert("No more alarm!");
+                       
                     });
                 }
 
