@@ -444,7 +444,7 @@ var clockApp = {
         }
 
         // the next section will handle a non-direct line trip, save this for the future
-        $("#dir").append(arrival, trainInfor);
+        $("#dir").append("<hr><h1>Marta Directions</h1>" + arrival + "<br>" + trainInfo);
 
         })
     },
