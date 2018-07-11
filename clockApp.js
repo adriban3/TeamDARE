@@ -84,30 +84,25 @@ var clockApp = {
                             $("#song-info").html("<p>" + temporaryArtistName + "</p>");
                         };
                     }
-                    // for (i=0; i<res.tracks.items.length; i++) {
-                    //     console.log(res.tracks.items[i].preview_url);
-                    //     if (res.tracks.items[i].preview_url == null) {
-                    //         console.log(res.tracks.items[i].artists[0].name + ": UNAVAILABLE");
-                    //     } else {console.log(res.tracks.items[i].artists[0].name)};
-                    // }
                     temporaryArtistName = res.tracks.items[0].artists[0].name;
                     previewUrl = res.tracks.items[1].preview_url;
                     console.log(previewUrl);
                     var audioElement = document.createElement("audio");
                     audioElement.setAttribute("src", previewUrl);
                     audioElement.play();
+                    var snoozing;
                     $(document).on("click", "#snooze-button", function () {
                         event.preventDefault();
                         // alert("Snoozed for 1 minute!");
                         audioElement.pause();
-                        setInterval(function () {
+                        snoozing = setInterval(function () {
                             audioElement.play();
                         }, 60000);
                     });
                     $(document).on("click", "#stop-button", function () {
                         event.preventDefault();
                         audioElement.pause();
-                        alert("No more alarm!");
+                       
                     });
                 }
 
