@@ -1,23 +1,17 @@
-// TO BE TRIED
-var chosenURL;
-var pickedSong;
-
-
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyDgYGbJ3biHldZY0j-V4NzJ0zt6cXEoP3k",
-    authDomain: "eirene-firebase.firebaseapp.com",
-    databaseURL: "https://eirene-firebase.firebaseio.com",
-    projectId: "eirene-firebase",
-    storageBucket: "eirene-firebase.appspot.com",
-    messagingSenderId: "210806145744"
-  };
-  firebase.initializeApp(config);
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyBgSsPWXNag-QHEfyFUD448bfD_wvX7jag",
+    authDomain: "alarm-7560f.firebaseapp.com",
+    databaseURL: "https://alarm-7560f.firebaseio.com",
+    projectId: "alarm-7560f",
+    storageBucket: "",
+    messagingSenderId: "197126652447"
+};
+firebase.initializeApp(config);
 
 // Create a variable to reference the database
 var database = firebase.database();
 
-var pickedSong = "";
 
 var clockApp = {
     dropDownSet: function () {
@@ -86,60 +80,44 @@ var clockApp = {
                         if (!temporarySongURL) {
                             console.log(temporaryArtistName + ": UNAVAILABLE");
                         } else {
+                            newDiv = $("<div>");
                             newButton = $("<button>");
-                            newButton.text(temporaryArtistName);
+                            newDiv.text(temporaryArtistName);
+                            $("#song-info").append(newDiv);
+                            newButton.text("This One");
                             newButton.attr("data", temporarySongURL);
                             newButton.addClass("pick-button");
                             $("#song-info").append(newButton);
                         };
                     }
-                    // previewUrl = res.tracks.items[1].preview_url;
-                    // console.log(previewUrl);
-                    // var audioElement = document.createElement("audio");
-                    // audioElement.setAttribute("src", previewUrl);
-                    // audioElement.play();
-                    // var snoozing;
-                    // $(document).on("click", "#snooze-button", function () {
-                    //     event.preventDefault();
-                    //     // alert("Snoozed for 1 minute!");
-                    //     audioElement.pause();
-                    //     snoozing = setInterval(function () {
-                    //         audioElement.play();
-                    //     }, 60000);
-                    // });
-                    // $(document).on("click", "#stop-button", function () {
-                    //     event.preventDefault();
-                    //     audioElement.pause();
+                    previewUrl = res.tracks.items[1].preview_url;
+                    console.log(previewUrl);
+                    var audioElement = document.createElement("audio");
+                    audioElement.setAttribute("src", previewUrl);
+                    audioElement.play();
+                    var snoozing;
+                    $(document).on("click", "#snooze-button", function () {
+                        event.preventDefault();
+                        // alert("Snoozed for 1 minute!");
+                        audioElement.pause();
+                        snoozing = setInterval(function () {
+                            audioElement.play();
+                        }, 60000);
+                    });
+                    $(document).on("click", "#stop-button", function () {
+                        event.preventDefault();
+                        audioElement.pause();
                        
-                    // });
+                    });
                 }
 
             ).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
         }
 
-        generateSpotifyAccessToken(artist);
-        clearInterval(alarm);
-
         var alarm = setInterval(function () {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
-                console.log(chosenURL);
-                var audioElement = document.createElement("audio");
-                    audioElement.setAttribute("src", chosenURL);
-                    audioElement.play();
-                var snoozing;
-                $(document).on("click", "#snooze-button", function () {
-                    event.preventDefault();
-                    // alert("Snoozed for 1 minute!");
-                    audioElement.pause();
-                    snoozing = setInterval(function () {
-                        audioElement.play();
-                    }, 60000);
-                });
-                $(document).on("click", "#stop-button", function () {
-                    event.preventDefault();
-                    audioElement.pause();
-                });
+                generateSpotifyAccessToken(artist);
                 clearInterval(alarm);
             }
         }, 1000);
@@ -439,11 +417,10 @@ var clockApp = {
                 arrival = "Train Arriving at " + myLines2[i].station + 
                 " " + moment(myLines2[i].arrival, "hh:mm:ss a").fromNow();
 
-                console.log(arrival);
-
+                
                 trainInfo = "You'll be taking the " + whichLine + " line " + "heading " + whichDirection + " at the " + currStatName;
-
-                console.log(trainInfo)
+                
+                $("#dir").append("<hr><h1>Marta Directions</h1>" + arrival + "<br>" + trainInfo);
                 
             };
 
@@ -457,15 +434,13 @@ var clockApp = {
         else {
             arrival = "Waiting on the MARTA Schedule!";
 
-            console.log(arrival);
-
             trainInfo = "You'll be taking the " + whichLine + " line " + "heading " + whichDirection + " at the " + currStatName;
 
-            console.log(trainInfo);
+                $("#dir").append("<hr><h1>Marta Directions</h1>" + arrival + "<br>" + trainInfo);
         }
 
         // the next section will handle a non-direct line trip, save this for the future
-        $("#dir").append("<hr><h1>Marta Directions</h1>" + arrival + "<br>" + trainInfo);
+            
 
         })
     },
@@ -480,7 +455,6 @@ var clockApp = {
         $.ajax(url, "Get").then(function (response) {
             console.log(response);
             var man = response.route.legs[0].maneuvers;
-            $("#dir").html("<h1>Driving Directions</h1>");
             for (var i in man) {
                 $("#dir").append(response.route.legs[0].maneuvers[i].narrative + "<br>");
             }
@@ -507,17 +481,5 @@ $(document).on("click", "#clockSet", function (e) { clockApp.clockSet(e) });
 $(document).on("click", "#go", function (e) { clockApp.mapquest(e, clockApp.MQapikey, clockApp.MQurl) });
 
 $(document).on("click", ".pick-button", function (e) {     
-    pickedSong = $(this).attr("data");
-    console.log(pickedSong);
-    // console.log(pickedSong); 
-    database.ref().set({
-        pickedURL: pickedSong
-      });
-    });
-
-database.ref().orderByChild("pickedURL").limitToLast(1).on("child_changed", function(snapshot) {
-    console.log(snapshot.val());
-    chosenURL = snapshot.val() ;
-    console.log("-----------------------------------");
-    console.log(chosenURL);
-})
+    var pickedSong = $(this).attr("data");
+    console.log(pickedSong); });
