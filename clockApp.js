@@ -451,7 +451,7 @@ var clockApp = {
 
     MQapikey: "lk4t8vdc1GbFGarz3jGhhCvcH03NQYbX",
 
-    MQurl: "http://www.mapquestapi.com/directions/v2/route?", //key=KEY&from=Clarendon Blvd,Arlington,VA&to=2400+S+Glebe+Rd,+Arlington,+VA"
+    MQurl: "https://cors-anywhere.herokuapp.com/http://www.mapquestapi.com/directions/v2/route?", //key=KEY&from=Clarendon Blvd,Arlington,VA&to=2400+S+Glebe+Rd,+Arlington,+VA"
 
     mapquest: function (e, MQapikey, MQurl) {
         e.preventDefault();
