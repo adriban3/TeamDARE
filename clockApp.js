@@ -1,17 +1,23 @@
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyBgSsPWXNag-QHEfyFUD448bfD_wvX7jag",
-    authDomain: "alarm-7560f.firebaseapp.com",
-    databaseURL: "https://alarm-7560f.firebaseio.com",
-    projectId: "alarm-7560f",
-    storageBucket: "",
-    messagingSenderId: "197126652447"
-};
-firebase.initializeApp(config);
+// TO BE TRIED
+var chosenURL;
+var pickedSong;
+
+
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDgYGbJ3biHldZY0j-V4NzJ0zt6cXEoP3k",
+    authDomain: "eirene-firebase.firebaseapp.com",
+    databaseURL: "https://eirene-firebase.firebaseio.com",
+    projectId: "eirene-firebase",
+    storageBucket: "eirene-firebase.appspot.com",
+    messagingSenderId: "210806145744"
+  };
+  firebase.initializeApp(config);
 
 // Create a variable to reference the database
 var database = firebase.database();
 
+var pickedSong = "";
 
 var clockApp = {
     dropDownSet: function () {
@@ -80,44 +86,60 @@ var clockApp = {
                         if (!temporarySongURL) {
                             console.log(temporaryArtistName + ": UNAVAILABLE");
                         } else {
-                            newDiv = $("<div>");
                             newButton = $("<button>");
-                            newDiv.text(temporaryArtistName);
-                            $("#song-info").append(newDiv);
-                            newButton.text("This One");
+                            newButton.text(temporaryArtistName);
                             newButton.attr("data", temporarySongURL);
                             newButton.addClass("pick-button");
                             $("#song-info").append(newButton);
                         };
                     }
-                    previewUrl = res.tracks.items[1].preview_url;
-                    console.log(previewUrl);
-                    var audioElement = document.createElement("audio");
-                    audioElement.setAttribute("src", previewUrl);
-                    audioElement.play();
-                    var snoozing;
-                    $(document).on("click", "#snooze-button", function () {
-                        event.preventDefault();
-                        // alert("Snoozed for 1 minute!");
-                        audioElement.pause();
-                        snoozing = setInterval(function () {
-                            audioElement.play();
-                        }, 60000);
-                    });
-                    $(document).on("click", "#stop-button", function () {
-                        event.preventDefault();
-                        audioElement.pause();
+                    // previewUrl = res.tracks.items[1].preview_url;
+                    // console.log(previewUrl);
+                    // var audioElement = document.createElement("audio");
+                    // audioElement.setAttribute("src", previewUrl);
+                    // audioElement.play();
+                    // var snoozing;
+                    // $(document).on("click", "#snooze-button", function () {
+                    //     event.preventDefault();
+                    //     // alert("Snoozed for 1 minute!");
+                    //     audioElement.pause();
+                    //     snoozing = setInterval(function () {
+                    //         audioElement.play();
+                    //     }, 60000);
+                    // });
+                    // $(document).on("click", "#stop-button", function () {
+                    //     event.preventDefault();
+                    //     audioElement.pause();
                        
-                    });
+                    // });
                 }
 
             ).catch(() => generateSpotifyAccessToken(() => getArtist(artist)));
         }
 
+        generateSpotifyAccessToken(artist);
+        clearInterval(alarm);
+
         var alarm = setInterval(function () {
             if (moment().format("H:mm") == clock) {
                 console.log("wake up idiot");
-                generateSpotifyAccessToken(artist);
+                console.log(chosenURL);
+                var audioElement = document.createElement("audio");
+                    audioElement.setAttribute("src", chosenURL);
+                    audioElement.play();
+                var snoozing;
+                $(document).on("click", "#snooze-button", function () {
+                    event.preventDefault();
+                    // alert("Snoozed for 1 minute!");
+                    audioElement.pause();
+                    snoozing = setInterval(function () {
+                        audioElement.play();
+                    }, 60000);
+                });
+                $(document).on("click", "#stop-button", function () {
+                    event.preventDefault();
+                    audioElement.pause();
+                });
                 clearInterval(alarm);
             }
         }, 1000);
@@ -484,5 +506,17 @@ $(document).on("click", "#clockSet", function (e) { clockApp.clockSet(e) });
 $(document).on("click", "#go", function (e) { clockApp.mapquest(e, clockApp.MQapikey, clockApp.MQurl) });
 
 $(document).on("click", ".pick-button", function (e) {     
-    var pickedSong = $(this).attr("data");
-    console.log(pickedSong); });
+    pickedSong = $(this).attr("data");
+    console.log(pickedSong);
+    // console.log(pickedSong); 
+    database.ref().set({
+        pickedURL: pickedSong
+      });
+    });
+
+database.ref().orderByChild("pickedURL").limitToLast(1).on("child_changed", function(snapshot) {
+    console.log(snapshot.val());
+    chosenURL = snapshot.val() ;
+    console.log("-----------------------------------");
+    console.log(chosenURL);
+})

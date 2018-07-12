@@ -319,7 +319,17 @@ body{
 ============ REAL TIME CLOCK END ==================*/
 
 
+button{
+    background:rgb(27, 0, 124);
+    margin-left: 5px;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Dosis', sans-serif;
+    box-shadow: none;
+    border: none;
+    margin-top: 5px;
 
+}
 
 
 
