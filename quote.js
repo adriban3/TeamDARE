@@ -1,4 +1,4 @@
-var queryURL = "http://quotes.rest/qod.json";
+var queryURL = "https://quotes.rest/qod.json";
 
          $.ajax({
             url: queryURL,
